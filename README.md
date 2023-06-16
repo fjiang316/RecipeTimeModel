@@ -123,7 +123,7 @@ The performance of the final model is better. This is because the accuracy of ou
 
 We can get a visualization on the performance of our final model using the illustration from the confusion matrix below:
 
-
+![confusion matrix](confusion_matrix.jpg)
 
 ---
 ## Fairness Analysis
