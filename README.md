@@ -76,7 +76,7 @@ After data cleaning, the combined DataFrame looks like the following (only showi
 
 **Response Variable**: `level` column that indicates the level of time consumption of a recipe. Because we want a prediction on the time consumption of a recipe categorized in different categories of timeframe, as shown in the data cleanning process of previous part, `level` is a good indicator.
 
-**Measureing Metrics**: the metrics for the performance of our classification model would be <u>*accuracy*</u>, this is because our distribution of level of time consumption in our observed datasets are distributed relatively fairly, so we could use accuracy as a fair metrics that relect the true performance of our model.
+**Measureing Metrics**: the metrics for the performance of our classification model would be <u>*accuracy*</u>, this is because our distribution of level of time consumption in our observed datasets are not distributed very spread out, so we could use accuracy as a fair metrics that relect the true performance of our model.
 
 **Information At Time of Prediction**: At the time of prediction, the user would normally have the recipe's ingredients, instructions, nutrition table, and the tags where they find the recipe at hand. Through these details on the recipe, people can resonably count the number of steps and ingredients used in the recipe, determine its difficulty based on its tags, and its estimated protein amount in the nutrition table of the recipe. Hence, we would have all four features columns available at the time of prediction.
 
@@ -96,10 +96,10 @@ With the above transformers for each of the feature, we used a ColumnTransformer
 **Model Performance**: 
 In our investigation, we separate the datasets in to a training set and a testing set (8:2 ratio), and fit our baseline model on the training set to test its performance in terms of accuracy on both seen and unseen data. 
 
-The accuracy of baseline model on training set (seen data) is 0.5053481923856245;
-the accuracy of baseline model on testing set (unseen data) is 0.5012050762503999.
+The accuracy of baseline model on training set (seen data) is 0.5043137464007679;
+the accuracy of baseline model on testing set (unseen data) is 0.5002452810067186.
 
-The performance of the baseline model is fine, but not terrific. This is because the accuracy is about 50%, but we have 40 percent of recipes classified as "light meal" in terms of time consumption. So 50% accuracy is not very significant in this case.
+The performance of the baseline model is fine, but not excellent. This is because the accuracy is about 50%, but we have 40 percent of recipes classified as "light meal" in terms of time consumption. So 50% accuracy is not very significant in this case.
 
 ---
 ## Final Model
@@ -127,3 +127,31 @@ We can get a visualization on the performance of our final model using the illus
 
 ---
 ## Fairness Analysis
+Going back to our investigation topic, we are investigating whether our model allows people to predict the time consumption of a recipe into one of the four categories we provided, to match with their lifestyle. So far, we have already constructed a final model that allows prediction, but observation the accuracy on the dataset alone cannot be a good indicator as to whether this model is fair when putting into different timings (older recipes and relatively newer recipes). We determined that a good way to test the fairness of our multiclass classification model is to take the difference between our predicted values's precision score on earlier recipes (2008-2012) and more recent recipes (2013-2018) for comparison. Hence, we are going to conduct a permutation test on the precision of our model in predicting the time consumption of recipes people reviewed in older recipes (2008-2012) and the precision of our model in predicting the time consumption of recipes people reviewed in more recent recipes (2013-2018) to see whether there is an actual bias in our model's performance in terms of different years.
+
+**Group A and Group B**: The two groups we are going to use in this permutation test will be extracted from the column `year`, in which we use a Binarizer with a threshold of 2012 to separate the two groups (older recipes and more recent recipes). 
+
+*Group A*: Recipes reviewed between 2008 and 2012.
+
+*Group B*: Recipes reviewed between 2013 and 2018. 
+
+(Note that our dataset only contains recipes reviewed between 2008 and 2018.)
+
+**Null Hypothesis**: Our model is fair. Its precision for older recipes (2008-2012) and more recent recipes
+(2013-2018) are roughly the same, and any differences are due to random chance.
+
+**Alternative Hypothesis**:  Our model is unfair. Its precision for older recipes is different from its
+precision for more recent recipes.
+
+**Significance Level**: The significance level we set for this permutation test is 0.01. That being said, we will perform a relatively strong permutation test with confidence level of 99%.
+
+**Evaluation Metrics and Test Statistics**: Since we used accuracy as the performance measurement in the models before, we will continue to use this as the evaluation metrics in our permutations. As for test statistics, because we suspect the accuracy might be different for testing on older recipes as compared to on more recent recipes, we use the absolute difference in accuracy scores of the predictions on two groups using our final model.
+
+**P-Value Result**:
+After 100 permutation, we get a p-value of 0.6, which is greater than our test statistics of 0.01. This suggests we fail to reject out null hypothesis.
+
+Below is a graphic visualization of the outcome of our permutation test:
+
+![permutation](permutation_test_dist.html)
+
+**Conclusion**: According to the result from our permutation test above, it shows evidence that suggests our final model on predicting time consumption based on recipe contents is very likely to be a fair model in terms of the time for both old recipes and the relatively recent recipes.
