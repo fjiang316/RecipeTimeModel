@@ -102,4 +102,28 @@ the accuracy of baseline model on testing set (unseen data) is 0.501205076250399
 The performance of the baseline model is fine, but not terrific. This is because the accuracy is about 50%, but we have 40 percent of recipes classified as "light meal" in terms of time consumption. So 50% accuracy is not very significant in this case.
 
 ---
-## 
+## Final Model
+In the final model, in order to improve accuracy of our model, we decided to add the following two features into our model when classifying the recipes:
+* `n_steps` (numerical feature): This is because a recipe with more steps tend to take longer time to cook. For example, baking a cake tends to take longer than than making salads, and it also takes more steps.
+    * Feature Engineering: As steps is a valuable numerical feature that exhibits a significant association with cooking minutes, we opt to normalize it in order to standardize the distribution and enhance its clarity in our modeling process.
+* `n_ingredients` (numerical feature): This is because a recipe that uses more ingredients tends to take longer time to in terms of preparation, which reveals longer time to cook.
+    * Feature Engineering: Given that ingredients is a valuable numerical feature that demonstrates a robust correlation with cooking minutes, we choose to standardize it. This standardization aims to normalize the distribution and increase its clarity in our modeling process.
+
+**Model Construction and Choice of Hyperparameter:**
+**Model Construction**: 
+Building upon the baseline model, we added the above two new features with StandardScaler transformer. We still use the RandomForestClassifer as our model of multiclass classification using pipeline. However, to improve accuracy of our model, we use Grid Search approach to figure out the optimized hyperparameter (maxmium depth of the decision tree inside the random forest).
+
+**Model Performance**: 
+We fit our final model with the max_depth returned by the Grid Search (max_depth = 12) on the same training set to test its performance in terms of accuracy on both seen and unseen data. 
+
+The accuracy of final model on training set (seen data) is 0.639138317159006;
+the accuracy of final model on testing set (unseen data) is 0.6193665351391703.
+
+The performance of the final model is better. This is because the accuracy of our final model improved by 10% as compared to our baseline model's accuracy, and we can compare the accuracy from the two models because we used the same training set and testing set for the two models.
+
+We can get a visualization on the performance of our final model using the illustration from the confusion matrix below:
+
+
+
+---
+## Fairness Analysis
