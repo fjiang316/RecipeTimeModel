@@ -85,4 +85,21 @@ After data cleaning, the combined DataFrame looks like the following (only showi
 **Features Used**:
 For the Baseline Model, we decided to use two features as shown below:
 
-- `difficulty`: This feature extracted from the tags indicates the difficulty level of a recipe, and could be used as an useful feature in predicting the time consumption of the recipe. This is because recipes harder to perform tends to take up more time than easier recipes due to more complicated instructions and techniques required. 
+* `difficulty` (categorical feature): This feature extracted from the tags indicates the difficulty level of a recipe, and could be used as an useful feature in predicting the time consumption of the recipe. This is because recipes harder to perform tends to take up more time than easier recipes due to more complicated instructions and techniques required. 
+    * Feature engineering: Since this feature is a categorical feature, we use one hot encoder to convert it into a bag of words matrix that can be useful for our modeling.
+* `protein` (numerical feature): This feature extracted from the nutrition table of the recipe indicates the amount of protein in that recipe, and could provide useful information in predicting the time it takes to complete the recipe. This is because recipes that are high in protein most of the time involve meat as the ingredient, which takes longer time to prepare and cook as compared to other recipes low in protein level.
+    * Feature Engineering: Since protein is a useful numerical feature that forms a strong correlation to cooking minutes, we decide to standardize it so that the distribution could be standardized and become more obvious during out modeling.
+
+**Model Construction**: 
+With the above transformers for each of the feature, we used a ColumnTransformer to allocate a OneHotEncoder transformer and a StandardScaler transformer to the two columns separately, and combined with a <u>RandomForestClassifier</u> as our multi-class classifier in one Pipeline object as out baseline model.
+
+**Model Performance**: 
+In our investigation, we separate the datasets in to a training set and a testing set (8:2 ratio), and fit our baseline model on the training set to test its performance in terms of accuracy on both seen and unseen data. 
+
+The accuracy of baseline model on training set (seen data) is 0.5053481923856245;
+the accuracy of baseline model on testing set (unseen data) is 0.5012050762503999.
+
+The performance of the baseline model is fine, but not terrific. This is because the accuracy is about 50%, but we have 40 percent of recipes classified as "light meal" in terms of time consumption. So 50% accuracy is not very significant in this case.
+
+---
+## 
