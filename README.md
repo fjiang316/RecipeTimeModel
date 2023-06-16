@@ -152,6 +152,6 @@ After 100 permutation, we get a p-value of 0.6, which is greater than our test s
 
 Below is a graphic visualization of the outcome of our permutation test:
 
-![permutation](permutation_test_dist.html)
+<iframe src="permutation_test_dist.html" width=800 height=600 frameBorder=0></iframe>
 
 **Conclusion**: According to the result from our permutation test above, it shows evidence that suggests our final model on predicting time consumption based on recipe contents is very likely to be a fair model in terms of the time for both old recipes and the relatively recent recipes.
